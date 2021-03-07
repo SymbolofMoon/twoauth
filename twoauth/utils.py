@@ -4,8 +4,8 @@ from twilio.rest import Client
 
 # Your Account Sid and Auth Token from twilio.com/console
 # and set the environment variables. See http://twil.io/secure
-account_sid = 'ACffc6b2f2eaf362348570dfbc9c934e5c'
-auth_token = 'a530363e3071ba65cc7acfd12eb6111c'
+account_sid = '#Update from Twilio account'
+auth_token = '#Update from Twilio account'
 client = Client(account_sid, auth_token)
 
 
