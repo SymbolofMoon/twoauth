@@ -3,11 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login
 from codes.forms import CodeForm
+from users.forms import CreateUserForm
 from users.models import CustomUser
 from .utils import send_sms
 
 @login_required
-
 def home_view(request):
     return render(request,'main.html', {})
 
@@ -45,4 +45,25 @@ def verify_view(request):
             else:
                 return redirect('login-view')
 
-    return render(request, 'verify.html', {'form': form})                
+    return render(request, 'verify.html', {'form': form})  
+
+
+
+
+def register_view(request):
+	if request.user.is_authenticated:
+		return redirect('home')
+	else:
+		form = CreateUserForm()
+		if request.method == 'POST':
+			form = CreateUserForm(request.POST)
+			if form.is_valid():
+				form.save()
+				user = form.cleaned_data.get('username')
+				#messages.success(request, 'Account was created for ' + user)
+
+				return redirect('login-view')
+			
+
+		context = {'form':form}
+		return render(request, 'register.html', context)                  
