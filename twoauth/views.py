@@ -32,7 +32,8 @@ def verify_view(request):
         code_user=f"{user.username}:{user.code}"
         if not request.POST:
             #send sms
-            send_sms(code_user)
+            print(user.phone_number)
+            send_sms(code_user,user.phone_number)
             print(code_user)
         if form.is_valid():
             num=form.cleaned_data.get('number')     
@@ -52,7 +53,7 @@ def verify_view(request):
 
 def register_view(request):
 	if request.user.is_authenticated:
-		return redirect('home')
+		return redirect('login-view')
 	else:
 		form = CreateUserForm()
 		if request.method == 'POST':
