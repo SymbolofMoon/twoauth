@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from codes.forms import CodeForm
 from users.forms import CreateUserForm
 from users.models import CustomUser
@@ -19,7 +19,8 @@ def auth_view(request):
         user=authenticate(request,username=username,password=password)  
         if user is not None:
             request.session['pk']=user.pk
-            return redirect('verify-view')
+            login(request,user)
+            return redirect('home-view')
 
     return render(request,'auth.html', {'form': form})
 
@@ -67,4 +68,14 @@ def register_view(request):
 			
 
 		context = {'form':form}
-		return render(request, 'register.html', context)                  
+		return render(request, 'register.html', context)  
+
+
+
+def logout_view(request):
+    logout(request)         
+    return redirect('login-view')  
+
+
+def forget_view(request):
+    return render(request,'forget.html', {})
