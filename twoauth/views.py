@@ -2,10 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout
+from django.core.mail import EmailMessage
 from codes.forms import CodeForm
 from users.forms import CreateUserForm
 from users.models import CustomUser
 from .utils import send_sms
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text,DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 @login_required
 def home_view(request):
@@ -52,25 +56,61 @@ def verify_view(request):
 
 
 
-def register_view(request):
-	if request.user.is_authenticated:
-		return redirect('login-view')
-	else:
-		form = CreateUserForm()
-		if request.method == 'POST':
-			form = CreateUserForm(request.POST)
-			if form.is_valid():
-				form.save()
-				user = form.cleaned_data.get('username')
-				#messages.success(request, 'Account was created for ' + user)
+# def register_view(request):
+# 	if request.user.is_authenticated:
+# 		return redirect('login-view')
+# 	else:
+# 		form = CreateUserForm()
+# 		if request.method == 'POST':
+# 			form = CreateUserForm(request.POST)
+# 			if form.is_valid():
+# 				form.is_active=False
+#                 form.save()
+#                 user = form.cleaned_data.get('username')
+# 				#messages.success(request, 'Account was created for ' + user)
+#                 emailto=form.cleaned_data.get('email')
+#                 email_subject="Activate your Email"
+#                 email_body='test body'
+#                 email=EmailMessage(
+#                     email_subject,
+#                     email_body,
+#                     'noreply@prateek.com',
+#                     [emailto]
+#                 )
 
-				return redirect('login-view')
+#                 email.send(fail_silently=False)
+#                 return redirect('login-view')
 			
 
-		context = {'form':form}
-		return render(request, 'register.html', context)  
+# 		context = {'form':form}
+# 		return render(request, 'register.html', context)  
 
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('login-view')
 
+    else:
+        form=CreateUserForm()
+        if request.method=="POST":
+            form=CreateUserForm(request.POST)
+            if form.is_valid():
+                form.is_active=False
+                form.save()
+                user=form.cleaned_data.get("username")
+                emailto=form.cleaned_data.get("email")
+                email_subject="Activate your email"
+                email_body="test body"
+                email=EmailMessage(
+                    email_subject,
+                    email_body,
+                    "noreply@prateek.com",
+                    [emailto]
+                )
+                email.send(fail_silently=False)
+                return redirect('login-view')
+
+        context={'form':form}
+        return render(request,'register.html',context)        
 
 def logout_view(request):
     logout(request)         
