@@ -106,33 +106,33 @@ def register_view(request):
                 user1.is_active=False
                 user1.save()
                 print(user1)
-                print("Ho")
+                
 
                 uidb64=urlsafe_base64_encode(force_bytes(user1.id))
-                print("Ho")
+                
 
                 domain=get_current_site(request).domain
-                print("Ho")
+                
 
                 link=reverse('activate',kwargs={'uidb64':uidb64,'token':token_generator.make_token(user1)})
-                print("Ho")
+                
 
                 activate_url='http://'+domain+link
-                print("Ho")
+                
                 
                 email_subject="Activate your email"
-                print("Ho")
-                email_body="Hi"+user+'Please use the link to verify your account\n'+activate_url
-                print("Ho")
+                
+                email_body="Hi "+user+',\n'+'Please use the link to verify your account\n'+activate_url
+                
                 email=EmailMessage(
                     email_subject,
                     email_body,
                     "noreply@prateek.com",
                     [emailto]
                 )
-                print("Ho")
+                
                 email.send(fail_silently=False)
-                print("Ho")
+                
                 return redirect('login-view')
 
         context={'form':form}
