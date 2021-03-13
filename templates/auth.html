@@ -26,6 +26,11 @@
                     <a href="{% url 'verify-view' %}" class="btn " style="float:right; background-color: #CCCC00; color: white" value="LOGIN WITH OTP">LOGIN WITH OTP</a>
 </div>
     </form>
+
+      <br>
+  <p><strong>-- OR --</strong></p>
+  <a href="{% url 'social:begin' 'github' %}">Login with GitHub</a><br>
+  <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a><br>
  </div>
 
 </div>
